@@ -1,3 +1,19 @@
-baseURL = "http://example.org/"
+baseURL = "https://dpromanko.netlify.com"
 languageCode = "en-us"
-title = "My New Hugo Site"
+title = "Devon Romanko"
+theme = "m10c"
+[params]
+  author = "Devon Romanko"
+  description = "Yoga, pour over coffee, meditation, and software development"
+  [[params.social]]
+    name = "github"
+    url = "https://github.com/dpromanko"
+  [[params.social]]
+    name = "twitter"
+    url = "https://twitter.com/dpromanko"
+  [params.style]
+    darkestColor = "#12283A"
+    darkColor = "#1C3D5A"
+    lightColor = "#BCDEFA"
+    lightestColor = "#f5f5f5"
+    primaryColor = "#6CB2EB"
