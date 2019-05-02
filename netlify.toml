@@ -1,0 +1,23 @@
+[[redirects]]
+  from = "http://dpromanko.netlify.com/*"
+  to = "https://www.romanko.dev/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://dpromanko.netlify.com/*"
+  to = "https://www.romanko.dev/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.devonromanko.com/*"
+  to = "https://www.romanko.dev/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://dpromanko.netlify.com/*"
+  to = "https://www.romanko.dev/:splat"
+  status = 301
+  force = true
