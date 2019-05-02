@@ -17,7 +17,19 @@
   force = true
 
 [[redirects]]
-  from = "https://dpromanko.netlify.com/*"
+  from = "https://www.devonromanko.com/*"
+  to = "https://www.romanko.dev/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://devonromanko.com/*"
+  to = "https://www.romanko.dev/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://devonromanko.com/*"
   to = "https://www.romanko.dev/:splat"
   status = 301
   force = true
