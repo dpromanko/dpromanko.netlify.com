@@ -2,6 +2,9 @@ baseURL = "https://dpromanko.netlify.com"
 languageCode = "en-us"
 title = "Devon Romanko"
 theme = "m10c"
+pygmentsUseClassic=false
+pygmentsCodefences=true
+pygmentsUseClasses=true
 [params]
   author = "Devon Romanko"
   description = "Yoga, pour over coffee, meditation, and software development"
