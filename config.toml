@@ -5,6 +5,7 @@ theme = "m10c"
 [params]
   author = "Devon Romanko"
   description = "Yoga, pour over coffee, meditation, and software development"
+  images = ["gopher.png"]
   [[params.social]]
     name = "github"
     url = "https://github.com/dpromanko"
