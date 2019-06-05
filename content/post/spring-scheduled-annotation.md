@@ -20,10 +20,10 @@ public void scheduledMethod() {
 }
 {{< / highlight >}}
 
-This works great, right? For months in production, my query had been running every 10 minutes as I so clearly told it to until one day I got a call that indicated to me that is was no longer running. Sure enough, after checking the logs of this fake code above I saw a message stating "I am running", but there was no "I am done" message. To my knowledge, once this happens to a snippet such as the one above your only option is to restart the application. As expected after a restart we were back up and running every 10 minutes. So what went wrong? I was able to confirm that the query did indeed finish executing on the database, so why didn't it return? I won't get into details, but I believe the connection to the database was severed. At this point, I figured we just got lucky (or unlucky) and I forgot about it.
+This works great, right? For months in production, my query had been running every 10 minutes as I so clearly told it to until one day I got a call that indicated to me that is was no longer running. Sure enough, after checking the logs of this code above I saw a message stating "I am running", but there was no "I am done" message. To my knowledge, once this happens to a snippet such as the one above your only option is to restart the application. As expected after a restart we were back up and running every 10 minutes. So what went wrong? I was able to confirm that the query did indeed finish executing on the database, so why didn't it return? I won't get into details, but I believe the connection to the database was severed. At this point, I figured we just got lucky (or unlucky) and I forgot about it.
 
 ### The second time
-The second time I encountered this issue (in a different application) was an @Scheduled annotation wrapping a method that performed an API call. Another developer and I were looking into this and I immediately knew what was wrong and how to fix it, although this time I had no idea what caused it. We restarted the application and everything was back to normal. I should also note, this application has more than just one @Scheduled method and we noticed those were no longer running either.
+The second time I encountered an @Scheduled method that stopped running (in a different application) was an @Scheduled annotation wrapping a method that performed an API call. Another developer and I were looking into this and I immediately knew what was wrong and how to fix it, although this time I had no idea what caused it. We restarted the application and everything was back to normal. I should also note, this application has more than just one @Scheduled method and we noticed those were no longer running either.
 
 ### Time to figure out what happened
 Clearly now it was time for me to better understand what is actually going on under the hood of the @Scheduled annotation. As soon as I got home from work I started playing around with the little demo below.
@@ -42,7 +42,6 @@ public class DemoSchedule {
     try {
       Thread.sleep(60000);
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     sleepy();
@@ -51,7 +50,7 @@ public class DemoSchedule {
 }
 {{< / highlight >}}
 
-This example demonstrates what happens to a @Scheduled method that never returns and more importantly never throws an exception. Simply adding
+This example demonstrates what happens to an @Scheduled method that never returns and more importantly never throws an exception. Simply adding
 
 {{< highlight java >}}
 throw new Exception();
@@ -62,7 +61,6 @@ anywhere inside the method `sleepy()` will cause the behavior I want/expect. Whe
 Even more to my surprise if you add another @Scheduled method, it won't run while `scheduledMethod()` is running forever. I didn't know why this was the case because I never looked at the documentation for @EnableScheduling.
 
 ### The documentation
-{{< tweet 1060067235316809729 >}}
 
 Taken from the Spring [EnableScheduling](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableScheduling.html) documentation:
 
@@ -73,10 +71,12 @@ Takeaways from the above documentation:
 1. The default scheduler is only allotted one thread, which is why the method above will only run once.
 2. All @Scheduled annotations share the same thread pool, which means all other @Scheduled annotations would be blocked from executing in the above example.
 
+{{< tweet 1060067235316809729 >}}
+
 ### How many @Scheduled methods could be executed simultaneously?
 If you only have one @Scheduled method in your application then technically you are fine with leaving it with the default single thread. Although, I'm willing to bet when you add another you won't remember to increase the thread pool so it is probably worth doing it now.
 
-If more than one @Scheduled method in your application could be overlap, then you should look at implementing [SchedulingConfigurer](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/SchedulingConfigurer.html). As you can see in the example below you will implement this on a class that is annotated with @Configuration and @EnableScheduling. One thing to note about the example below is they are using 100 as the thread pool size. To my knowledge, the number here doesn't really matter as long as it is at least the number of @scheduled methods that could overlap, that way no @Scheduled method is ever waiting on another to finish before running.
+If more than one @Scheduled method in your application could be overlap, then you should look at implementing [SchedulingConfigurer](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/SchedulingConfigurer.html). As you can see in the example below you will implement this on a class that is annotated with @Configuration and @EnableScheduling. One thing to note about the example below is they are using 100 as the thread pool size. To my knowledge, the number here doesn't really matter as long as it is at least the number of @Scheduled methods that could overlap, that way no @Scheduled method is ever waiting on another to finish before running.
 
 Taken from the Spring [EnableScheduling](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableScheduling.html) documentation:
 
@@ -104,3 +104,4 @@ This one is on you to figure out based on what you are doing in each of your @Sc
 If you made it this far, thanks for reading my first technical blog post! I acknowledge this is nothing profound and nothing you couldn't learn from reading the documentation. I just wanted to share a little story about something that broke in production and what I learned from it.
 
 If you think any of this information is wrong, have questions/comments, or have any feedback then please reach out to me on [Twitter](https://twitter.com/dpromanko)!
+
