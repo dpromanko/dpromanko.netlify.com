@@ -1,0 +1,36 @@
+baseUrl: /
+languageCode: en-us
+theme: terminal
+paginate: 5
+
+params:
+  contentTypeName: posts
+  themeColor: blue
+  showMenuItems: 5
+  showLanguageSelector: false
+  fullWidthTheme: false
+  centerTheme: true
+  favicon: "favicon.ico"
+
+languages:
+  en:
+    languageName: English
+    title: dpromanko
+    keywords: ''
+    menuMore: Show more
+    readMore: Keep reading
+    readOtherPosts: Read other posts
+
+    params:
+      logo:
+        logoText: dpromanko
+        logoHomeLink: /
+
+    menu:
+      main:
+      - identifier: posts
+        name: posts
+        url: /
+      - identifier: about
+        name: about
+        url: /about
